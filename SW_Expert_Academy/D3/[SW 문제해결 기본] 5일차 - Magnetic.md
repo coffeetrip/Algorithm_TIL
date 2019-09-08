@@ -9,3 +9,46 @@
 (5) 중간에 S극을 만나면 교착 개수를 1증가하고, 다시 해당 위치부터 (2)을 반복
 ```
 
+```python
+def table_N(j, i):
+    global magnetic
+    global N
+
+    if j == 0:
+        return 1
+    else:
+        if j > 0 and magnetic[j-1][i] == 0:
+            table_N(j-1, i)
+        elif j > 0 and magnetic[j-1][i] == 1:
+            magnetic[j-1][i] = 0
+            return 1
+        return 0
+
+def table_S(j, i):
+    global magnetic
+    global N
+
+    if j == N-1:
+        return 1
+    else:
+        if j < N-1 and magnetic[j+1][i] == 0:
+            table_S(j+1, i)
+        elif j < N-1 and magnetic[j+1][i] == 1:
+            magnetic[j+1][i] = 0
+            return 1
+        return 0
+
+for T in range(1, 11):
+    N = int(input())
+    magnetic = [list(map(int, input().split())) for _ in range(N)]
+
+    fiction = 0
+    for i in range(100):
+        for j in range(100):
+            if (magnetic[j][i] == 2 and table_N(j, i) == 1) or (magnetic[j][i] == 1 and table_S(j, i) == 1):
+                fiction += 1
+                magnetic[j][i] = 0
+
+    print('#{} {}' .format(T, fiction))
+```
+

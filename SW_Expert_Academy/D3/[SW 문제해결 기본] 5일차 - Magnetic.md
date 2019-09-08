@@ -10,78 +10,27 @@
 ```
 
 ```python
-def table_N(j, i):
+def table_N(j, i, N):
     global magnetic
-    global N
 
-    if j == 0:
-        return 0
-    else:
-        if j > 0 and magnetic[j-1][i] == 0:
-            table_N(j-1, i)
-        elif j > 0 and magnetic[j-1][i] == 1:
-            magnetic[j-1][i] = 0
+    if j > 0 and magnetic[j-1][i] == 0:
+        if table_N(j-1, i, N) == 1:
             return 1
-        return 0
+    elif j > 0 and magnetic[j-1][i] == 1:
+        magnetic[j-1][i] = 0
+        return 1
 
-def table_S(j, i):
+
+def table_S(j, i, N):
     global magnetic
-    global N
 
-    if j == N-1:
-        return 0
-    else:
-        if j < N-1 and magnetic[j+1][i] == 0:
-            table_S(j+1, i)
-        elif j < N-1 and magnetic[j+1][i] == 1:
-            magnetic[j+1][i] = 0
+    if j < N-1 and magnetic[j+1][i] == 0:
+        if table_S(j+1, i, N) == 1:
             return 1
-        return 0
+    elif j < N-1 and magnetic[j+1][i] == 2:
+        magnetic[j+1][i] = 0
+        return 1
 
-for T in range(1, 11):
-    N = int(input())
-    magnetic = [list(map(int, input().split())) for _ in range(N)]
-
-    fiction = 0
-    for i in range(100):
-        for j in range(100):
-            if (magnetic[j][i] == 2 and table_N(j, i) == 1) or (magnetic[j][i] == 1 and table_S(j, i) == 1):
-                fiction += 1
-                magnetic[j][i] = 0
-
-    print('#{} {}' .format(T, fiction))
-```
-
-```python
-def table_N(j, i):
-    global magnetic
-    global N
-
-    if j == 0:
-        return 0
-    else:
-        if j > 0:
-            if magnetic[j-1][i] == 0:
-                table_N(j-1, i)
-            elif magnetic[j-1][i] == 1:
-                magnetic[j-1][i] = 0
-                return 1
-        return 0
-
-def table_S(j, i):
-    global magnetic
-    global N
-
-    if j == N-1:
-        return 0
-    else:
-        if j < N-1:
-            if magnetic[j+1][i] == 0:
-                table_S(j+1, i)
-            elif magnetic[j+1][i] == 1:
-                magnetic[j+1][i] = 0
-                return 1
-        return 0
 
 for T in range(1, 11):
     N = int(input())
@@ -91,14 +40,18 @@ for T in range(1, 11):
     for i in range(100):
         for j in range(100):
             if magnetic[j][i] == 2:
-                magnetic[j][i] = 0
-                if table_N(j, i) == 1:
+                J, I = j, i
+                if table_N(j, i, N) == 1:
                     crash += 1
+                magnetic[J][I] = 0
             elif magnetic[j][i] == 1:
-                magnetic[j][i] = 0
-                if table_S(j, i) == 1:
+                J, I = j, i
+                if table_S(j, i, N) == 1:
                     crash += 1
+                magnetic[J][I] = 0
 
     print('#{} {}' .format(T, crash))
 ```
+
+
 

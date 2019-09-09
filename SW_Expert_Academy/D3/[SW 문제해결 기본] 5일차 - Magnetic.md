@@ -16,10 +16,13 @@ def table_N(j, i, N):
     if j > 0 and magnetic[j-1][i] == 0:
         if table_N(j-1, i, N) == 1:
             return 1
+        else:
+        	return 0
     elif j > 0 and magnetic[j-1][i] == 1:
         magnetic[j-1][i] = 0
         return 1
-
+	else:
+        return 0
 
 def table_S(j, i, N):
     global magnetic
@@ -43,7 +46,7 @@ for T in range(1, 11):
                 J, I = j, i
                 if table_N(j, i, N) == 1:
                     crash += 1
-                magnetic[J][I] = 0
+              	magnetic[J][I] = 0
             elif magnetic[j][i] == 1:
                 J, I = j, i
                 if table_S(j, i, N) == 1:

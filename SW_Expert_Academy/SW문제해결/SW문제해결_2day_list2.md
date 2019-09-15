@@ -226,7 +226,7 @@ for tc in range(1, T+1):
     numbers = list(map(int, input().split()))
     numbers = sorted(numbers)
     numbers = [str(number) for number in numbers]
-​
+
     result = []
     for i in range(10):
         if i % 2:
@@ -248,10 +248,10 @@ for tc in range(1, T+1):
         order.append(nums[-i-1])
     if N %2 :
         order.append(nums[N//2])
-​
+
     if len(order) > 10:
         order = order[:10]
-​
+
     order2 = list(map(str, order))
     print('#{} {}'.format(tc, ' '.join(order2)))
 ```
@@ -262,14 +262,14 @@ for t in range(TC):
     N = int(input()) # 정수 개수
     nums = list(map(int, input().split())) # N개의 정수들
     nums.sort() # 오름차순 정렬 ex) 1 2 3 4 5 ...
-​
+
     nums_rev = nums[::-1] # 내림차순 정렬 ex) 10 9 8 7 6 5 4 ...
-​
+
     res = [] # 최종 리스트
     for i in range(5): # 10개만 출력하므로 두 리스트에서 5개씩만 뽑아주면 된다.
         res.append(nums_rev[i]) # 내림차순에서 하나 넣고
         res.append(nums[i])     # 오름차순에서 하나 넣는다.
-​
+
     print('#{} {}'.format(t+1, " ".join(map(str, res))))
 ```
 
@@ -280,14 +280,14 @@ for tc in range(1, T+1):
     A = list(map(int, input().split()))
     SA = sorted(A) # 오름차순 정렬 저장
     SP = [] # 특별한 정렬 저장
-​
+
     # 특별한 정렬
     for i in range(5):
         SP.append(SA[-1])
         SA.pop()
         SP.append(SA[0])
         SA.pop(0)
-​
+
     print('#{}'.format(tc), end=' ')
     for i in range(10):
         print(SP[i], end=' ')

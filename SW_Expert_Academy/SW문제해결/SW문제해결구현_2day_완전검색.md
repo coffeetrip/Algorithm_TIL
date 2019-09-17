@@ -9,6 +9,63 @@ for i in range(1, N):
 ```
 
 ```python
+def f(i, j, total):
+    global array, N, minV
+
+    if minV < total:
+        return
+    if i == N-1 and j == N-1:
+        if minV > total:
+            minV = total
+    else:
+        if 0 <= i+1 < N:
+            f(i+1, j, total + array[i+1][j])
+        if 0 <= j+1 < N:
+            f(i, j+1, total + array[i][j+1])
+
+T = int(input())
+for tc in range(1, T+1):
+    N = int(input())
+    array = [list(map(int, input().split())) for _ in range(N)]
+
+    minV = 1000000000
+    f(0, 0, array[0][0])
+
+    print('#{} {}' .format(tc, minV))
+```
+
+```python
+def f(i, j, total):
+    global array, N, minV
+    di = [0, 1]
+    dj = [1, 0]
+
+    if [i, j] == [N-1, N-1]:
+        if minV > total:
+            minV = total
+    elif minV < total:
+        return
+    else:
+        for k in range(2):
+            ni = i + di[k]
+            nj = j + dj[k]
+            if 0 <= ni < N and 0 <= nj < N:
+                f(ni, nj, total + array[ni][nj])
+
+T = int(input())
+for tc in range(1, T+1):
+    N = int(input())
+    array = [list(map(int, input().split())) for _ in range(N)]
+
+    minV = 10000000000
+    f(0, 0, array[0][0])
+
+    print('#{} {}' .format(tc, minV))
+```
+
+
+
+```python
 def f(i, j, total ):
     global arr, to
 
@@ -98,33 +155,7 @@ for t in range(1, int(input())+1):
     print('#{} {}'.format(t, res))
 ```
 
-```python
-# 승연님
-def find(i, j, hap):
-    global board
-    global N
-    global minV
-    if hap > minV:
-        return
-    if i == N - 1 and j == N - 1:
-        if minV > hap:
-            minV = hap
-    else:
-        if 0 <= i+1 < N:
-            find(i + 1, j, hap + board[i+1][j])
-        if 0 <= j+1 < N:
-            find(i, j + 1, hap + board[i][j+1])
 
-
-t = int(input())
-for tc in range(1, t + 1):
-    N = int(input())
-    board = [list(map(int, input().split())) for i in range(N)]
-    temp = []
-    minV = 1000000000000000
-    find(0, 0, board[0][0])
-    print("#{} {}".format(tc, minV))
-```
 
 
 
@@ -156,11 +187,7 @@ for tc in range(1, T+1):
     N = int(input())
     arr = [list(map(int, input().split())) for _ in range(N)]
 
-
-    p = []
-    for i in range(2, N+1):
-        p.append(i)
-
+    p = list(range(2, N+1))
     minV = 100000000
     perm(0, N-1)
 
@@ -168,12 +195,16 @@ for tc in range(1, T+1):
 ```
 
 ```python
-# 승연님
 def make(n, k):
-    global possibility
     global places
+    global minV
     if n == k:
-        possibility.append(places[:])
+        one = [0] + places + [0]
+        used = 0
+        for j in range(len(one) - 1):
+            used += energy[one[j]][one[j + 1]]
+        if used < minV:
+            minV = used
     else:
         for i in range(n, k):
             places[i], places[n] = places[n], places[i]
@@ -181,65 +212,50 @@ def make(n, k):
             places[i], places[n] = places[n], places[i]
 
 
-def find():
-    global energy
-    global possibility
-    minV = 100000000000000
-    for i in range(len(possibility)):
-        one = [0] + possibility[i] + [0]
-        used = 0
-        for j in range(len(one)-1):
-            used += energy[one[j]][one[j+1]]
-        if used < minV:
-            minV = used
-    return minV
-
 t = int(input())
 for tc in range(1, t+1):
     N = int(input())
     energy = [list(map(int, input().split())) for i in range(N)]
 
     places = list(range(1, N))
-    possibility = []
+    minV = 100000000000000
     make(0, N-1)
-    res = find()
-    print("#{} {}".format(tc, res))
+    print("#{} {}".format(tc, minV))
 ```
 
 ```python
-# 윤선님
-def perm(k,n):
-    global minE
-    if k == n:
-        val =0
-        for j in range(len(nums)-1):
-            if val > minE:
+def perm(n, k):
+    global minV, array
+    if n == k:
+        s = 0
+        for j in range(len(array)-1):
+            if s > minV:
                 return
             else:
-                val+=arr[nums[j]][nums[j+1]]
-        if minE > val+arr[0][nums[0]]+arr[nums[-1]][0]:
-            minE = val+arr[0][nums[0]]+arr[nums[-1]][0]
+                s += card[array[j]][array[j+1]]
+        if minV > s + card[0][array[0]] + card[array[-1]][0]:
+            minV = s + card[0][array[0]] + card[array[-1]][0]
     else:
-        for i in range(k, n):
-            nums[i],nums[k] = nums[k], nums[i]
-            perm(k+1,n)
-            nums[i], nums[k] = nums[k], nums[i]
+        for i in range(n, k):
+            array[i], array[n] = array[n], array[i]
+            perm(n+1, k)
+            array[i], array[n] = array[n], array[i]
 
 
 
-for t in range(int(input())):
+T = int(input())
+for tc in range(1, T+1):
     N = int(input())
-    arr=[list(map(int, input().split())) for _ in range(N)]
-    nums= [i for i in range(1,N)]
-    minE = 100000000
-    perm(0,N-1)
-    print('#'+str(t+1), minE)
+    card = [list(map(int, input().split())) for _ in range(N)]
+
+    array = list(range(1, N))
+    minV = 1000000000
+    perm(0, N-1)
+
+    print('#{} {}' .format(tc, minV))
 ```
 
 ```python
-import sys
-sys.stdin = open('input.txt', 'r')
-
 def f(n, s):
     global arr, visited, minV, N
     if not sum(visited):
@@ -257,6 +273,7 @@ for tc in range(1, T + 1):
     N = int(input())
     arr = [list(map(int, input().split())) for _ in range(N)]
     minV = 10000
+    
     visited = [0] + [1] * (N - 1)
     f(0, 0)
     print("#{} {}".format(tc, minV))
@@ -266,31 +283,30 @@ for tc in range(1, T + 1):
 def f(n, k, s):
     global minV
     if n == k:
-        if s + table[p[-2]-1][p[-1]-1] < minV:
-            minV = s + table[p[-2]-1][p[-1]-1]
+        if s + table[p[-2] - 1][p[-1] - 1] < minV:
+            minV = s + table[p[-2] - 1][p[-1] - 1]
         return
     elif s > minV:
         return
     else:
         for i in range(k):
             if used[i] == 0:
-                p[n+1] = room[i]
+                p[n + 1] = room[i]
                 used[i] = 1
-                f(n+1, k, s + table[p[n]-1][p[n+1]-1])
+                f(n + 1, k, s + table[p[n] - 1][p[n + 1] - 1])
                 used[i] = 0
 
 
-
 T = int(input())
-for t in range(1, T+1):
+for t in range(1, T + 1):
     N = int(input())
     table = [list(map(int, input().split())) for _ in range(N)]
-    room = list(range(2, N+1))
-    minV = 100 * (N+1)
-    p = [0] * (N-1)
-    p = [1] + p + [1]
-    used = [0] * (N-1)
-    f(0, N-1, 0)
+    room = list(range(2, N + 1))
+    minV = 100 * (N + 1)
+
+    p = [1] + [0] * (N - 1) + [1]
+    used = [0] * (N - 1)
+    f(0, N - 1, 0)
     print(minV)
 ```
 

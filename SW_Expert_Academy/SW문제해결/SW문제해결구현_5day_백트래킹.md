@@ -126,11 +126,6 @@ for tc in range(1, t+1):
 ```
 
 ```python
-import sys
-
-sys.stdin = open('sample_input.txt', 'r')
-
-
 def f(i, d, cnt):
     global minV
     global stations
@@ -162,17 +157,13 @@ for tc in range(1, T + 1):
     minV = len(stations)
     f(0, stations[0], 0)
     print("#{} {}".format(tc, minV))
-
 ```
 
 
 
 ```PYTHON
-
-
 # 백트래킹이 아님
 T = int(input())
-
 
 def compare(i, charge):
     global battery_station
@@ -180,7 +171,6 @@ def compare(i, charge):
     for c in range(0, charge + 1):
         if battery_station[i + c] > battery_station[i]:
             return False
-
     return True
 
 
@@ -201,20 +191,15 @@ for tc in range(1, T + 1):
         i += 1
         charge -= 1
     print('#{} {}'.format(tc, cnt))
-
 ```
 
 compare(i, charge)
 
 
 
+
+
 ### 5209. [파이썬 S/W 문제해결 구현] 5일차 - 최소 생산 비용
-
-```
-
-```
-
-
 
 ```python
 def f(n, k, value):

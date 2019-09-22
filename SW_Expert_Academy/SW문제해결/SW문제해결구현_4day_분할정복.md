@@ -1,7 +1,95 @@
 ### 병합정렬
 
 ```python
-# 고태환
+def divide(m):
+    if len(m) <= 1:
+        return m
+    mid = len(m)//2
+    left = divide(m[:mid])
+    right = divide(m[mid:])
+    return merge(left, right)
+
+def merge(left, right):
+    global cnt
+
+    if left[-1] > right[-1]:
+        cnt += 1
+
+    result = [0] * (len(left) + len(right))
+    l, r, i = 0, 0 ,0
+    while l < len(left) or r < len(right):
+        if l < len(left) and r < len(right):
+            if left[l] <= right[r]:
+                result[i] = left[l]
+                i += 1
+                l += 1
+            else:
+                result[i] = right[r]
+                i += 1
+                r += 1
+        elif l < len(left):
+            for k in range(l, len(left)):
+                result[i] = left[k]
+                i += 1
+                l += 1
+        elif r < len(right):
+            for k in range(r, len(right)):
+                result[i] = right[k]
+                i += 1
+                r += 1
+    return result
+
+T = int(input())
+for tc in range(1, T+1):
+    N = int(input())
+    a = list(map(int, input().split()))
+
+    cnt = 0
+    print('#{} {} {}' .format(tc, divide(a)[N//2], cnt))
+```
+
+```python
+def merge_sort(m):
+    if len(m) == 1:
+        return m
+    a = len(m)
+
+    left = m[:a//2]
+    right = m[a//2:]
+
+    left = merge_sort(left)
+    right = merge_sort(right)
+
+    return merge(left, right)
+
+def merge(L, R):
+    global c
+
+    result = []
+    if L[-1] > R[-1]:
+        c += 1
+    while len(L) > 0 or len(R) > 0:
+        if len(L) > 0 and len(R) > 0:
+            if L[0] <= R[0]:
+                result.append(L.pop(0))
+            else:
+                result.append(R.pop(0))
+        elif len(L) > 0:
+            result.append(L.pop(0))
+        elif len(R) > 0:
+            result.append(R.pop(0))
+    return result
+
+T = int(input())
+for tc in range(1, T+1):
+    N = int(input())
+    a = list(map(int, input().split()))
+
+    c = 0
+    print('#{} {} {}'.format(tc, merge_sort(a)[N//2], c))
+```
+
+```python
 def merge(left, right):
     global cnt
     result = [0] * (len(left) + len(right))
@@ -217,96 +305,7 @@ for T in range(int(input())):
     print('#{} {} {}'.format(T + 1, A[N // 2], cnt))
 ```
 
-```python
-def merge(left, right):
-    global count
-    if left[-1] > right[-1]:
-        count += 1
-    result = [0] * (len(left) + len(right))
-    l = 0
-    r = 0
-    i = 0
-    while l < len(left) or r < len(right):
-        if l < len(left) and r < len(right):
-            if left[l] <= right[r]:
-                result[i] = left[l]
-                i += 1
-                l += 1
-            else:
-                result[i] = right[r]
-                i += 1
-                r += 1
-        elif l < len(left):
-            for k in range(l, len(left)):
-                result[i]=left[k]
-                i+=1
-                l+=1
-        elif r < len(right):
-            for k in range(r, len(right)):
-                result[i]=right[k]
-                i+=1
-                r+=1
-    return result
 
-
-def divide(nums):
-    if len(nums) == 1:
-        return nums
-    left = divide(nums[:len(nums) // 2])
-    right = divide(nums[len(nums) // 2:])
-    return merge(left, right)
-
-
-for t in range(int(input())):
-    N = int(input())
-    nums = list(map(int, input().split()))
-    count = 0
-    print(divide(nums)[N//2], count)
-```
-
-```python
-import sys
-sys.stdin = open('input.txt', 'r')
-
-def merge_sort(m):
-    if len(m) == 1:
-        return m
-    a = len(m)
-
-    left = m[:a//2]
-    right = m[a//2:]
-
-    left = merge_sort(left)
-    right = merge_sort(right)
-
-    return merge(left, right)
-
-def merge(L, R):
-    global c
-
-    result = []
-    if L[-1] > R[-1]:
-        c += 1
-    while len(L) > 0 or len(R) > 0:
-        if len(L) > 0 and len(R) > 0:
-            if L[0] <= R[0]:
-                result.append(L.pop(0))
-            else:
-                result.append(R.pop(0))
-        elif len(L) > 0:
-            result.append(L.pop(0))
-        elif len(R) > 0:
-            result.append(R.pop(0))
-    return result
-
-T = int(input())
-for tc in range(1, T+1):
-    N = int(input())
-    a = list(map(int, input().split()))
-    # 정렬 후 N//2번째 원소, 오른쪽 원소가 더 큰 경우
-    c = 0
-    print('#{} {} {}'.format(tc, merge_sort(a)[N//2], c))
-```
 
 
 
@@ -315,12 +314,36 @@ for tc in range(1, T+1):
 ### 퀵 정렬
 
 ```python
-import sys
-import pprint
+def quicksort(a, l, r):
+    global N, res
+    if l < r:
+        s = partition(a, l, r)
+        quicksort(a, l, s-1)
+        quicksort(a, s+1, r)
 
-sys.stdin = open('calc.txt', 'r')
+def partition(a, l, r):
+    p = a[r]
+    i = l - 1
+    for j in range(l, r):
+        if a[j] <= p:
+            i += 1
+            a[i], a[j] = a[j], a[i]
+    a[i+1], a[r] = a[r], a[i+1]
+    return i + 1
 
 
+T = int(input())
+for tc in range(1, T+1):
+    N = int(input())
+    a = list(map(int, input().split()))
+
+    l, r = 0, N-1
+    quicksort(a, l, r)
+    
+    print('#{} {}' .format(tc, a[N//2]))
+```
+
+```python
 def solution(sample, start_index, last_index):
     if start_index == last_index:
         return sample
@@ -347,19 +370,12 @@ def solution(sample, start_index, last_index):
 for t in range(int(input())):
     size = int(input())
     sample = list(map(int, input().split()))
+    
     solution(sample, 0, len(sample) - 1)
     print("#{} {}".format(t + 1, sample[size // 2]))
-
-# 1 2
-# 2 6
-
 ```
 
 ```python
-import sys
-
-sys.stdin = open('quick.txt', 'r')
-
 def quick_sort(nlist, p, x):
     if p > x:
         q = partition(nlist, p, x)
@@ -379,7 +395,7 @@ T = int(input())
 for t in range(1, T+1):
     N = int(input())
     ilist = list(map(int, input().split()))
-    result = [0] * N
+
     quick_sort(ilist, len(ilist)-1, 0)
     print(ilist[N//2])
 ```

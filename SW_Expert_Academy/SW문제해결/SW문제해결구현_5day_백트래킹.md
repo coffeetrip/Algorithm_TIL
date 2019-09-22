@@ -3,33 +3,31 @@
 ### 5208. [파이썬 S/W 문제해결 구현] 5일차 - 전기버스2
 
 ```python
-def f(n, k, e, c):    # n번 정류장에 도착할때 남은 에너지
-    global min_cnt, battery
+def f(n, k, battery, cnt):    # n번 정류장에 도착할때 남은 에너지
+    global min_cnt
 
     if n == k:
-        if min_cnt > c:
-            min_cnt = c
+        if min_cnt > cnt:
+            min_cnt = cnt
         return
-    elif c > min_cnt:
+    elif cnt > min_cnt:
         return
     elif n < k:
-        if e-1 >= 0:
-            f(n+1, k, e-1, c)   # 통과
-        f(n + 1, k, battery[n] - 1, c + 1)  # 교체
+        if battery-1 >= 0:
+            f(n+1, k, battery-1, cnt)   # 통과
+        f(n + 1, k, M[n] - 1, cnt + 1)  # 교체
 
 
 
 T = int(input())
 for tc in range(1, T + 1):
-    battery = list(map(int, input().split()))
+    M = list(map(int, input().split()))
 
     min_cnt = 1000000
-    f(1, battery[0], battery[1], 0)
+    f(1, M[0], M[1], 0)
 
     print('#{} {}' .format(tc, min_cnt))
 ```
-
-
 
 ```python
 # 함수(지금 정류장 번호, 마지막 정류장번호, 배터리, 교체횟수)

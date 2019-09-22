@@ -50,42 +50,24 @@ for tc in range(1, T+1):
 ```
 
 ```python
-# 혁준님
 T = int(input())
-
 for tc in range(1, T + 1):
     N, M = map(int, input().split())
 
     weights = list(map(int, input().split()))
-    truck_weights = list(map(int, input().split()))
-
-    truck_weights.sort()
+    truck = list(map(int, input().split()))
+    truck.sort()
     weights.sort(reverse=True)
-    used = []
-    for available in truck_weights:  # 작은 놈들한테 큰거 먼저 준다
-        for weight in weights:
-            if weight <= available:
-                used.append(weight)
-                weights.remove(weight)
-                break
-    print("#{} {}".format(tc, sum(used)))
-```
 
-```python
-T = int(input())
-for t in range(1, T+1):
-    N, M = map(int, input().split())
-    w = list(map(int, input().split()))
-    tr = list(map(int, input().split()))
-    w = sorted(w, reverse=True)
-    total = 0
-    for i in tr:
-        for j in w:
-            if i >= j:
-                total += j
-                w.remove(j)
+    move = 0
+    for t in truck:  # 작은 놈들한테 큰거 먼저 준다
+        for w in weights:
+            if w <= t:
+                move += w
+                weights.remove(w)
+                print(move)
                 break
-    print(total)
+    print("#{} {}".format(tc, move))
 ```
 
 ```python
@@ -134,26 +116,29 @@ for t in range(int(input())):
 ### 5202. [파이썬 S/W 문제해결 구현] 3일차 - 화물 도크
 
 ```python
-def f(time):
-    global N, cnt
-    j = 0
-    for i in range(1, N):
-        if time[i][0] >= time[j][1]:
-            cnt += 1
-            j = i
-    return cnt
-
 T = int(input())
 for tc in range(1, T + 1):
-    N = int(input())  # 신청서
+    N = int(input())
     time = []
     for nc in range(N):
         s, e = map(int, input().split())
         time.append([s, e])
 
     time.sort(key=lambda x: x[1])
+
+    # for i in range(0, N-1):
+    #     for j in range(i+1, N):
+    #         if time[i][1] > time[j][1]:
+    #             time[i], time[j] = time[j], time[i]
+                
     cnt = 1
-    print('#{} {}' .format(tc, f(time)))
+    j = 0
+    for i in range(1, N):
+        if time[i][0] >= time[j][1]:
+            cnt += 1
+            j = i
+
+    print('#{} {}' .format(tc, cnt))
 ```
 
 ```python
@@ -164,7 +149,9 @@ for tc in range(1, t + 1):
     for i in range(N):
         start, end = map(int, input().split())
         worklist.append([start, end])
+        
     worklist.sort(key=lambda x: x[1])
+    
     work = 1
     start, end = worklist.pop(0)
     for i in range(N-1):
@@ -180,7 +167,6 @@ T = int(input())
 
 for tc in range(1, T + 1):
     N = int(input())
-
     schedules = [tuple(map(int, input().split())) for _ in range(N)]
 
     schedules.sort(key=lambda x: x[1])  # 종료시간으로 정렬
@@ -203,8 +189,8 @@ for tc in range(1, T + 1):
 T = int(input())
 for tc in range(1, T+1):
     N = int(input())
-    # 끝나는 시간 기준으로 정렬한다. lambda 사용
     apply = sorted([list(map(int, input().split())) for _ in range(N)], key=lambda s: s[1])
+    
     time_table = []
     cnt = 0
     for i in apply:
@@ -226,86 +212,81 @@ for tc in range(1, T+1):
 ### 5203. [파이썬 S/W 문제해결 구현] 3일차 - 베이비진 게임
 
 ```python
-def baby(p, r):
-    card_idx = [0]*10
+def babygin(p, result):
+    card_cnt = [0]*10
     for i in range(len(p)):
-        card_idx[p[i]] += 1
+        card_cnt[p[i]] += 1
 
-    for i in range(len(card_idx)):
-        if card_idx[i] >= 3:
-            return r
-    for i in range(len(card_idx)-2):
-        if card_idx[i] >= 1 and card_idx[i+1] >= 1 and card_idx[i+2] >= 1:
-            return r
+    for i in range(10):
+        if card_cnt[i] >= 3:
+            return result
+    for i in range(8):
+        if card_cnt[i] >= 1 and card_cnt[i+1] >= 1 and card_cnt[i+2] >= 1:
+            return result
     return 0
+
 
 T = int(input())
 for tc in range(1, T+1):
-    card = list(map(int, input().split()))
+    num = list(map(int, input().split()))
 
-    p1 = []
-    p2 = []
-    for i in range(len(card)):
-        if i % 2 == 0:
-            p1.append(card[i])
-            if len(p1) >= 3:
-                result = baby(p1, 1)
-                if result != 0:
-                    break
-        else:
-            p2.append(card[i])
-            if len(p2) >= 3:
-                result = baby(p2, 2)
-                if result != 0:
-                    break
-    print('#{} {}' .format(tc, result))
+    p1, p2 = [], []
+    winner = 0
+    for i in range(0, 12, 2):
+        p1.append(num[i])
+        p2.append(num[i+1])
+        if len(p1) >= 3:
+            winner = babygin(p1, 1)
+            if winner != 0:
+                break
+        if len(p2) >= 3:
+            winner = babygin(p2, 2)
+            if winner != 0:
+                break
+    print('#{} {}' .format(tc, winner))
 ```
 
 ```python
-def check(nums):
+def babygin(p):
+    for i in range(10):
+        if p[i] >= 3:
+            return True
     for i in range(8):
-        if nums[i] != 0 and nums[i+1] != 0 and nums[i+2] != 0:
+        if p[i] >= 1 and p[i+1] >= 1 and p[i+2] >= 1:
             return True
-        elif nums[i] >= 3:
-            return True
-    if nums[8] >=3 or nums[9] >= 3:
-        return True
     return False
 
 
-t = int(input())
-for tc in range(1, t + 1):
-    orders = list(map(int, input().split()))
-    playerA = [0] * 10
-    playerB = [0] * 10
+T = int(input())
+for tc in range(1, T+1):
+    num = list(map(int, input().split()))
+
+    p1, p2 = [0]*10, [0]*10
     winner = 0
     for i in range(12):
         if i % 2 == 0:
-            playerA[orders[i]] += 1
+            p1[num[i]] += 1
         else:
-            playerB[orders[i]] += 1
-
+            p2[num[i]] += 1
         if i >= 5:
-            if check(playerA):
+            if babygin(p1):
                 winner = 1
                 break
-            elif check(playerB):
+            if babygin(p2):
                 winner = 2
                 break
-    print("#{} {}".format(tc, winner))
 
+    print('#{} {}' .format(tc, winner))
 ```
 
 ```python
 def is_run(cards):
     return cards.count(3) > 0
 
-
 def is_triplet(cards):
     for i in range(8):
         if cards[i:i + 3].count(0) == 0:
             return True
-
     return False
 
 
@@ -317,7 +298,6 @@ for tc in range(1, T + 1):
     even_counting = [0] * 10
     winner = 0
     for i in range(len(numbers)):
-        # 카드 분배
         if i % 2 == 0:  # 여기선 홀수
             odd_counting[numbers[i]] += 1
             run1 = is_run(odd_counting)

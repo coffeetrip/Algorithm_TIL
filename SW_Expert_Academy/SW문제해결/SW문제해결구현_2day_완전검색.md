@@ -10,13 +10,14 @@ for i in range(1, N):
 
 ```python
 def f(i, j, total):
-    global array, N, minV
+    global N, minV
 
     if minV < total:
         return
     if i == N-1 and j == N-1:
         if minV > total:
             minV = total
+        return
     else:
         if 0 <= i+1 < N:
             f(i+1, j, total + array[i+1][j])
@@ -164,94 +165,35 @@ for t in range(1, int(input())+1):
 ### 5189. [파이썬 S/W 문제해결 구현] 2일차 - 전자카트
 
 ```python
-def perm(n, k):
-    global arr, minV
-    if n == k:
-        s = 0
-        s += arr[0][p[0]-1]
-        for m in range(k-1):
-            s += arr[p[m]-1][p[m+1]-1]
-        s += arr[p[-1]-1][0]
-
-        if minV > s:
-            minV = s
-    else:
-        for i in range(n, k):
-            p[n], p[i] = p[i], p[n]
-            perm(n+1, k)
-            p[n], p[i] = p[i], p[n]
-
-
-T = int(input())
-for tc in range(1, T+1):
-    N = int(input())
-    arr = [list(map(int, input().split())) for _ in range(N)]
-
-    p = list(range(2, N+1))
-    minV = 100000000
-    perm(0, N-1)
-
-    print('#{} {}' .format(tc, minV))
-```
-
-```python
-def make(n, k):
-    global places
+def battery(n, k):
     global minV
+
     if n == k:
-        one = [0] + places + [0]
-        used = 0
-        for j in range(len(one) - 1):
-            used += energy[one[j]][one[j + 1]]
-        if used < minV:
-            minV = used
-    else:
-        for i in range(n, k):
-            places[i], places[n] = places[n], places[i]
-            make(n+1, k)
-            places[i], places[n] = places[n], places[i]
-
-
-t = int(input())
-for tc in range(1, t+1):
-    N = int(input())
-    energy = [list(map(int, input().split())) for i in range(N)]
-
-    places = list(range(1, N))
-    minV = 100000000000000
-    make(0, N-1)
-    print("#{} {}".format(tc, minV))
-```
-
-```python
-def perm(n, k):
-    global minV, array
-    if n == k:
-        s = 0
-        for j in range(len(array)-1):
-            if s > minV:
+        new = [0] + permutation + [0]
+        min_battery = 0
+        for i in range(len(new)-1):
+            if min_battery > minV:
                 return
-            else:
-                s += card[array[j]][array[j+1]]
-        if minV > s + card[0][array[0]] + card[array[-1]][0]:
-            minV = s + card[0][array[0]] + card[array[-1]][0]
+            min_battery += golf_course[new[i]][new[i+1]]
+        if minV > min_battery:
+            minV = min_battery
     else:
         for i in range(n, k):
-            array[i], array[n] = array[n], array[i]
-            perm(n+1, k)
-            array[i], array[n] = array[n], array[i]
-
+            permutation[i], permutation[n] = permutation[n], permutation[i]
+            battery(n+1, k)
+            permutation[i], permutation[n] = permutation[n], permutation[i]
 
 
 T = int(input())
 for tc in range(1, T+1):
     N = int(input())
-    card = [list(map(int, input().split())) for _ in range(N)]
+    golf_course = [list(map(int, input().split())) for _ in range(N)]
 
-    array = list(range(1, N))
-    minV = 1000000000
-    perm(0, N-1)
+    permutation = [i for i in range(1, N)]
+    #permutation = list(range(1, N))
 
+    minV = 100000000
+    battery(0, N-1)
     print('#{} {}' .format(tc, minV))
 ```
 
@@ -283,68 +225,32 @@ for tc in range(1, T + 1):
 def f(n, k, s):
     global minV
     if n == k:
-        if s + table[p[-2] - 1][p[-1] - 1] < minV:
-            minV = s + table[p[-2] - 1][p[-1] - 1]
+        if s + golf[p[-2]][p[-1]] < minV:
+            minV = s + golf[p[-2]][p[-1]]
         return
     elif s > minV:
         return
     else:
         for i in range(k):
             if used[i] == 0:
-                p[n + 1] = room[i]
+                p[n+1] = permutation[i]
                 used[i] = 1
-                f(n + 1, k, s + table[p[n] - 1][p[n + 1] - 1])
+                f(n+1, k, s + golf[p[n]][p[n+1]])
                 used[i] = 0
 
-
 T = int(input())
-for t in range(1, T + 1):
+for tc in range(1, T + 1):
     N = int(input())
-    table = [list(map(int, input().split())) for _ in range(N)]
-    room = list(range(2, N + 1))
+    golf = [list(map(int, input().split())) for _ in range(N)]
+
+    permutation = list(range(1, N))
     minV = 100 * (N + 1)
 
-    p = [1] + [0] * (N - 1) + [1]
+    p = [0] + [0] * (N - 1) + [0]
     used = [0] * (N - 1)
+
     f(0, N - 1, 0)
-    print(minV)
-```
 
-
-
-
-
-
-
-```python
-#5일차 백트래킹(시간초과)
-def f(n, k):
-    global arr, minV
-    if n == k:
-        s = 0
-        for i in range(k):
-            if s > minV:
-                return
-            s += arr[i][p[i]]
-
-        if minV > s:
-            minV = s
-    else:
-        for i in range(n, N):
-            p[n], p[i] = p[i], p[n]
-            f(n+1, k)
-            p[n], p[i] = p[i], p[n]
-
-
-T = int(input())
-for tc in range(1, T+1):
-    N = int(input())
-    arr = [list(map(int, input().split())) for _ in range(N)]
-
-    p = [i for i in range(N)]
-
-    minV = 100000000
-    f(0, N)
     print('#{} {}' .format(tc, minV))
 ```
 

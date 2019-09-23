@@ -189,3 +189,32 @@ for tc in range(1, T+1):
 
 
 
+
+
+### 4881. [파이썬 S/W 문제해결 기본] 5일차 - 배열 최소 합
+
+```python
+def f(n, k, s):
+    global minV
+    if n == k:
+        if minV > s:
+            minV = s
+        return
+    elif minV < s:
+        return
+    else:
+        for i in range(n, k):
+            bit[i], bit[n] = bit[n], bit[i]
+            f(n+1, k, s + array[n][bit[n]])
+            bit[i], bit[n] = bit[n], bit[i]
+
+T = int(input())
+for tc in range(1, T+1):
+    N = int(input())
+    array = [list(map(int, input().split())) for _ in range(N)]
+    bit = list(range(N))
+    minV = 1000000000
+    f(0, N, 0)
+    print('#{} {}' .format(tc, minV))
+```
+

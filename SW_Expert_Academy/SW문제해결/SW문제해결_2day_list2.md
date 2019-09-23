@@ -56,6 +56,7 @@ A = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 T = int(input())
 for tc in range(1, T + 1):
     N, K = map(int, input().split())
+    
     all = []
     for i in range(1, 1 << 12):
         temp = []
@@ -70,6 +71,140 @@ for tc in range(1, T + 1):
             result += 1
     print("#{} {}".format(tc, result))
 ```
+
+```python
+T = int(input())
+for tc in range(1, T+1):
+    N, K = map(int, input().split())
+
+    w = 12
+    cnt = 0
+    for i in range(1, 1<<w):
+        temp = []
+        for j in range(w):
+            if i & (1<<j):
+                temp.append(j+1)
+
+        if len(temp) == N and sum(temp) == K:
+            cnt += 1
+
+    print('#{} {}' .format(tc, cnt))
+```
+
+```python
+def f(n, k, s, N, K):
+    global cnt
+    if n == k:
+        if sum(s) == K and len(s) == N and s != []:
+            cnt += 1
+    elif sum(s) > K:
+        return
+    elif len(s) > N:
+        return
+    else:
+        f(n+1, k, s+[bit[n]], N, K)
+        f(n+1, k, s, N, K)
+
+T = int(input())
+for tc in range(1, T+1):
+    N, K = map(int, input().split())
+    bit = [i for i in range(1, 13)]
+    cnt = 0
+
+    f(0, 12, [], N, K)
+    print('#{} {}' .format(tc, cnt))
+```
+
+```python
+# n : 지금까지 교환한 원소의 수, k : 쓸 수 있는 원소의 수
+# s : n-1까지의 부분집합의 합, m : 원하는 합, t : 남은 구간의 합
+# p : 부분집합의 길이
+def check(n, k, s, m, t, p):
+	global cnt , N
+	if p == N:
+		if s == m:
+			cnt += 1
+	elif s + t < m:
+		return
+	elif s > m:
+		return
+	elif n == k:
+		return
+	else:
+		# 부분집합에 포함됬을 때
+		check(n+1, k, s+A[n], m, t-A[n], p+1)
+		# 부분집합에 포함되지 않았을 때
+		check(n+1, k, s, m, t-A[n], p)
+
+T = int(input())
+for tc in range(1, T+1):
+	# 원소의 수, 부분집합의 합
+	N, K = map(int, input().split())
+
+	cnt = 0
+	A = [x for x in range(1, 13)]
+	check(0, len(A), 0, K, sum(A), 0)
+	print('#{} {}'.format(tc, cnt))
+```
+
+```python
+def f(n, r):
+    global cnt
+    if r == 0:
+        if sum(temp) == K:
+            cnt += 1
+    elif n < r:
+        return
+    else:
+        temp[r-1] = A[n-1]
+        f(n-1, r-1)
+        f(n-1, r)
+
+
+A = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+T = int(input())
+for tc in range(1, T+1):
+    N, K = list(map(int, input().split()))
+    temp = [0]*N
+    cnt = 0
+    f(12, N)
+    print('#{} {}'.format(tc, cnt))
+Collapse
+```
+
+```python
+TC  = int(input())
+num = [1,2,3,4,5,6,7,8,9,10,11,12]
+Len = len(num)
+
+#부분집합 구하기
+lst = []
+for i in range(1<<Len):
+    sub_lst = []
+    for j in range(Len):
+        if i & (1<<j):
+            sub_lst.append(num[j])
+    lst.append(sub_lst)
+
+for tc in range(1, TC+1):
+    N, K = map(int, input().split())
+
+    #길이 맞는 리스트 구하기
+    len_lst = []
+    for i in lst:
+        if len(i) == N:
+            len_lst.append(i)
+
+    #합 일치 유무 확인
+    result = 0
+    for i in len_lst:
+        if sum(i) == K:
+            result += 1
+
+    print('#%s %d'%(tc, result))
+```
+
+
 
 ```PYTHON
 for T in range(1, int(input())+1):

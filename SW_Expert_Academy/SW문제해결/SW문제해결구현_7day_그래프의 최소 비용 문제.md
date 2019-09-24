@@ -1,10 +1,10 @@
-- 인수의 생일 파티(다익스트라) 1795
-
-- 상원이의 생일파티(Dfs/bfs) 5521
-
 - 창용 마을 무리의 개수(상호배타집합) 7465
 
-- 정사각형 방(dfs/bfs/dp) 1861
+- 상원이의 생일파티(Dfs/bfs 그래프 탐색) 5521
+
+- 정사각형 방(dfs/bfs/dp 그래프 탐색 응용) 1861
+
+- 인수의 생일 파티(양방향 다익스트라) 1795
 
 - [sw응용]2일차 - 최대상금 1244
 
@@ -114,6 +114,38 @@ for t in range(int(input())):
 
 
 ### 5250. [파이썬 S/W 문제해결 구현] 7일차 - 최소 비용
+
+```python
+def f(i, j):
+    global N
+    di = [1, 0, -1, 0]
+    dj = [0, 1, 0, -1]
+    D = [[999999]*N for _ in range(N)]
+    D[i][j] = 0
+    queue = [[i, j]]
+
+    while len(queue) != 0:
+        x = queue.pop(0)
+        for k in range(4):
+            ni = x[0] + di[k]
+            nj = x[1] + dj[k]
+            if 0 <= ni < N and 0 <= nj < N:
+                diff = 0
+                if H[ni][nj] > H[x[0]][x[1]]:
+                    diff = H[ni][nj] - H[x[0]][x[1]]
+                if D[ni][nj] > D[x[0]][x[1]] + diff + 1:
+                    D[ni][nj] = D[x[0]][x[1]] + diff + 1
+                    queue.append([ni, nj])
+    return D[N-1][N-1]
+
+T = int(input())
+for tc in range(1, T+1):
+    N = int(input())
+    H = [list(map(int, input().split())) for _ in range(N)]
+
+    minV = 1000000
+    print('#{} {}' .format(tc, f(0, 0)))
+```
 
 ```python
 def find(N):
@@ -301,7 +333,6 @@ for tc in range(1, t + 1):
             if 0 < near[w][v] < 10001:
                 D[v] = min(D[v], D[w] + near[w][v])
     print("#{} {}".format(tc, D[-1]))
-
 ```
 
 ```python

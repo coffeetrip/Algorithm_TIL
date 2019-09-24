@@ -345,3 +345,135 @@ for t in range(1, T+1):
     print(f"#{t} {ans}")
 ```
 
+#### 최소 생산 비용 변형
+
+```
+3
+-24 -3
+-59 5
+-2 -79
+25 -15
+-15 71
+-99 -92
+```
+
+```python
+def f(n, k):
+    global min_cost
+    if n == k:
+        s = 0
+        for i in range(N):
+            s += abs(a[bit[i]-1][0] - b[bit[i]-1][0]) + abs(a[bit[i]-1][1] - b[bit[i]-1][1])
+        if min_cost > s:
+            min_cost = s
+    else:
+        for i in range(n, k):
+            bit[i], bit[n] = bit[n], bit[i]
+            f(n+1, k)
+            bit[i], bit[n] = bit[n], bit[i]
+
+N = int(input())
+a = [list(map(int, input().split())) for _ in range(N)]
+b = [list(map(int, input().split())) for _ in range(N)]
+bit = list(range(1, N+1))
+min_cost = 1000000
+f(0, N)
+print(min_cost)
+```
+
+```python
+def perm(n, k):
+    global minV
+    if n == k:
+        s = 0
+        for i in range(N):
+            s += (abs(local[i][0]-factory[p[i]][0]) + abs(local[i][1]-factory[p[i]][1]))
+        if s < minV:
+            minV = s
+    else:
+        for i in range(n, k):
+            p[n], p[i] = p[i], p[n]
+            perm(n+1, k)
+            p[n], p[i] = p[i], p[n]
+
+# N = 3
+N = int(input())
+# local = [[-24, -3], [-59, 5], [-2, -79]]
+local = [list(map(int, input().split())) for _ in range(N)]
+# factory = [[25, -15], [-15, 71], [-99, -92]]
+factory = [list(map(int, input().split())) for _ in range(N)]
+p = [_ for _ in range(N)]
+minV = 1000000
+perm(0, N)
+print(minV)
+```
+
+```python
+bit = list(range(1, 2*N+1))
+min_cost = 10000000
+f(0, 2, 2*N)
+print(min_cost)
+def check(n, k):
+	global minV
+	if n == k:
+		distance=0
+		for i in range(N):
+			x1 = local[i][0]
+			y1 = local[i][1]
+			x2 = factory[i][0]
+			y2 = factory[i][1]
+			distance += abs(x1 - x2) + abs(y1 - y2)
+		if minV > distance:
+			minV = distance
+		return
+	else:
+		for i in range(k):
+			if used[i] != 1:
+				res[n] = i
+				used[i] = 1
+				check(n + 1, k)
+				used[i] = 0
+
+
+N = int(input())
+local = [list(map(int, input().split())) for x in range(N)]
+factory = [list(map(int, input().split())) for x in range(N)]
+
+res = [0] * N
+used = [0] * N
+minV = 1000000
+check(0, N)
+print(minV)
+```
+
+```python
+def npr(n, k):
+    global minval, N
+    if n == k:
+        compare = 0
+        for i in range(N):
+           compare +=abs(house[i][0] - fac[p[i] - 1][0]) + abs(house[i][1] - fac[p[i] - 1][1])
+        if minval > compare:
+            minval = compare
+    else:
+        for i in range(N):
+            if used[i] == 0:
+                used[i] = 1
+                p[n] = i+1
+                npr(n+1, k)
+                used[i] = 0
+
+minval = 99999
+N = int(input())
+coord = [list(map(int, input().split())) for _ in range(N*2)]
+
+house = coord[0:N]
+fac = coord[N:]
+
+used = [0]* N
+p = [0] * N
+
+npr(0, N)
+print(minval)
+```
+

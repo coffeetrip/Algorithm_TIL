@@ -51,43 +51,41 @@ print문을 이용해서 배열을 출력해보니 내가 생각하는 인덱스
 ## 4837. [파이썬 S/W 문제해결 기본] 2일차 - 부분집합의 합
 
 ```PYTHON
-A = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-
 T = int(input())
-for tc in range(1, T + 1):
-    N, K = map(int, input().split())
-    
-    all = []
-    for i in range(1, 1 << 12):
-        temp = []
-        for j in range(12):
-            if i & (1 << j):
-                temp.append(A[j])
-        all.append(temp)
-
-    result = 0
-    for i in range(len(all)):
-        if len(all[i]) == N and sum(all[i]) == K:
-            result += 1
-    print("#{} {}".format(tc, result))
-```
-
-```python
-T = int(input())
+A = list(range(1, 13))
 for tc in range(1, T+1):
     N, K = map(int, input().split())
 
-    w = 12
     cnt = 0
-    for i in range(1, 1<<w):
+    for i in range(1, 1<<12):
         temp = []
-        for j in range(w):
+        for j in range(12):
             if i & (1<<j):
-                temp.append(j+1)
-
+                temp.append(A[j])
         if len(temp) == N and sum(temp) == K:
             cnt += 1
+    print('#{} {}' .format(tc, cnt))
+```
 
+```python
+def f(n, k, N, K, s, m):
+   global cnt
+   if n == k:
+       if s == K and m == N:
+           cnt += 1
+   else:
+       f(n+1, k, N, K, s, m)
+       f(n+1, k, N, K, s+bit[n], m+1)
+
+
+T = int(input())
+A = list(range(1, 13))
+for tc in range(1, T+1):
+    N, K = map(int, input().split())
+
+    bit = list(range(1, 13))
+    cnt = 0
+    f(0, 12, N, K, 0, 0)
     print('#{} {}' .format(tc, cnt))
 ```
 

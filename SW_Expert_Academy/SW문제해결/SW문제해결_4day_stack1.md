@@ -131,6 +131,74 @@ for tc in range(1, int(input())+1):
 
 ## 4871. [파이썬 S/W 문제해결 기본] 4일차 - 그래프 경로
 
+#### 반복
+
+```python
+def dfs1(n, G, V):  # 반복구조, 각 노드를 1번씩만 방문
+    visited = [0]*(V+1)
+    s = []  # 스택 생성
+    s.append(n)  # 시작노드 push(), 방문할 노드를 저장
+    visited[n] = 1  # push()한 노드를 표시
+
+    while s:  # 방문하지 않은 노드가 있으면(갈림길에서 남겨놓은 노드가 있으면)
+        visited[n] = 1
+        n = s.pop()  # 갈림길에서 하나를 선택
+        # print(n, end=" ")  # 처리 순서를 출력
+        if n == G:
+            return 1
+        for i in range(1, V+1):
+            if adj[n][i] == 1 and visited[i] == 0:  # i가 n에 인접하고 방문하지 않은노드면
+                s.append(i)
+                visited[i] = 1
+    return 0
+
+
+T = int(input())
+for tc in range(1, T+1):
+    V, E = map(int, input().split())
+    adj = [[0]*(V+1) for _ in range(V+1)]
+    result = 0
+    for i in range(E):  # 간선 정보로부터 인접행렬 만들기
+        n1, n2 = map(int, input().split())
+        adj[n1][n2] = 1
+    S, G = map(int, input().split())
+
+    result = dfs1(S, G, V)
+    print('#{} {}' .format(tc, result))
+```
+
+#### 재귀
+
+```python
+def dfs2(n, G, V):  # 각 노드를 1번씩만 방문
+    visited2[n] = 1
+    if n == G:
+        return 1
+    else:
+        # n에 인접하고, 방문하지 않은 노드로 이동
+        for i in range(1, V+1):
+            if adj[n][i] == 1 and visited2[i] == 0:  # i가 n에 인접하고
+                if dfs2(i, G, V) == 1:
+                    return 1
+    return 0
+
+T = int(input())
+for tc in range(1, T+1):
+    V, E = map(int, input().split())
+    adj = [[0]*(V+1) for _ in range(V+1)]
+    result = 0
+    for i in range(E):  # 간선 정보로부터 인접행렬 만들기
+        n1, n2 = map(int, input().split())
+        adj[n1][n2] = 1
+    S, G = map(int, input().split())
+
+    visited2 = [0]*(V+1)
+    result = dfs2(S, G, V)
+    print('#{} {}' .format(tc, result))
+```
+
+
+
 ```python
 def stack(S, G):
     global link
